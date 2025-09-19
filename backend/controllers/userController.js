@@ -27,7 +27,7 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashedPassword });
-    const token = generateToken(user.email, user._id);
+    const token = generateToken(user._id, user.role);
 
     return res
       .status(201)
@@ -53,7 +53,7 @@ export const logIn = async (req, res) => {
     }
     const match = await bcrypt.compare(password, user.password);
     if (user && match) {
-      const token = generateToken(email, user._id);
+      const token = generateToken(user._id, user.role);
       return res.status(200).json({ message: "Login successful", token, user });
     }
     return res.status(404).json({ message: "Invalid email or password" });

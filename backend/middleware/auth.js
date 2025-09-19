@@ -3,7 +3,8 @@ dotenv.config();
 import { checkToken } from "./token.js";
 export const auth = (req, res, next) => {
   const header = req.header("Authorization");
-  if (!header) {
+
+  if (!header || !header.startsWith("Bearer ")) {
     return res.status(401).json({
       error: "Access Denied",
     });

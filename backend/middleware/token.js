@@ -6,8 +6,8 @@ const option = {
   expiresIn: "3h",
 };
 
-export const generateToken = (email, id) => {
-  const payload = { id: id, email: email };
+export const generateToken = (id , role) => {
+  const payload = { id , role };
 
   const token = jwt.sign(payload, process.env.SECRET_KEY, option);
   return token;
