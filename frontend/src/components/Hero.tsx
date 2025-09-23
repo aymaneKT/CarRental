@@ -7,13 +7,12 @@ export default function Hero() {
   const handleChanges = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => setInfo({ ...info, [e.target.name]: e.target.value });
-  console.log(info);
   return (
     <div
-      className="h-screen flex flex-col items-center justify-center gap-14 max-sm:pt-10
+      className="h-screen w-screen flex  flex-col items-center justify-center gap-14 max-sm:pt-10
     bg-light text-center"
     >
-      <h1 className="text-4xl md:text-5xl font-semibold">
+      <h1 className="text-4xl md:text-5xl mt-10 font-semibold">
         Luxury cars on rent
       </h1>
       <form className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 rounded-lg md:rounded-full w-full max-w-80 md:max-w-200 bg-white  shadow-[0px_8px_20px_rgba(0,0,0,0.1)]">

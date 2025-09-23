@@ -12,13 +12,13 @@
 } */
 
 html {
-  overflow: hidden;
+  overflow-x: hidden;
 }
-img {
+/* img {
   max-width: 100%;
   height: auto;
-  /* display: block; */
-}
+  display: block; 
+} */
 a {
   text-decoration: none;
   color: inherit;
@@ -37,7 +37,7 @@ h6 {
 button {
   /* background: none; */
   cursor: pointer;
-  border: none;
+  /* border: none; */
 }
 
 ul,

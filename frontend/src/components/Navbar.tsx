@@ -4,9 +4,9 @@ import { useState } from "react";
 export default function Navbar() {
   const location = useLocation().pathname;
   const navigate = useNavigate();
-  const [isOpenNavbar, setIsOpenNavBar] = useState<boolean>(true);
+  const [isOpenNavbar, setIsOpenNavBar] = useState<boolean>(false);
   return (
-    <div
+    <nav
       className={` ${
         location === "/" && "bg-light"
       } flex items-center  justify-between w-screen border-borderColor px-6 py-4 relative border-b text-gray-600 md:px-16 lg:px-24 xl:px-32`}
@@ -20,9 +20,8 @@ export default function Navbar() {
       <div
         className={`${
           location === "/" ? "bg-light" : "bg-white"
-        } flex  items-center max-sm:px-7 gap-5 transform  duration-150 max-sm:absolute max-sm:flex-col max-sm:items-start max-sm:top-[100%] max-sm:h-screen max-sm:left-0 max-sm:w-full
-        
-        ${isOpenNavbar ? "translate-x-0" : "translate-x-[100%]"}
+        } flex  items-center max-sm:px-7 gap-5 transform  duration-500 max-sm:absolute max-sm:flex-col max-sm:items-start max-sm:top-[100%] max-sm:h-screen max-sm:left-0 max-sm:w-full
+        ${isOpenNavbar ? "max-sm:left-0" : "max-sm:left-full"}
         `}
       >
         <div className="flex items-center gap-5 max-sm:flex-col max-sm:items-start">
@@ -48,11 +47,11 @@ export default function Navbar() {
         </div>
       </div>
       <img
-        className="hidden cursor-pointer max-sm:block"
+        className="block sm:hidden cursor-pointer "
         onClick={() => setIsOpenNavBar(!isOpenNavbar)}
         src={isOpenNavbar ? assets.close_icon : assets.menu_icon}
         loading="lazy"
       />
-    </div>
+    </nav>
   );
 }
