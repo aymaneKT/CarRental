@@ -7,7 +7,7 @@ export default function CarCard({ car }: { car: ICar }) {
   return (
     <div
       onClick={() => {
-        navigate(`car-details/${car._id}`);
+        navigate(`/car-details/${car._id}`);
       }}
       className="group rounded-xl overflow-hidden shadow-lg hover:-translate-y-1 transition-all duration-500 cursor-pointer border border-borderColor"
     >
