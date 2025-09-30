@@ -1,43 +1,34 @@
-import { useEffect, useState } from "react";
-import { assets, dummyDashboardData } from "../../assets/assets";
-import type { IDashboard } from "../../Interfaces/IDashboard";
+import { assets } from "../../assets/assets";
+
 import Title from "../../components/owner/Title";
+import { useAppContext } from "../../context/AppContext";
 
 export default function Dashboard() {
-  const [data, setData] = useState<IDashboard>({
-    totalCars: 0,
-    pendingBookings: 0,
-    completedBookings: 0,
-    recentBookings: [],
-    monthlyRevenue: 0,
-    totalBookings: 0,
-  });
+  const { currency, dashboard } = useAppContext();
+
   const dashbordCards = [
     {
       title: "Total Cars",
-      value: data.totalCars,
+      value: dashboard?.totalCars,
       icon: assets.carIconColored,
     },
     {
       title: "Total Bookings",
-      value: data.totalBookings,
+      value: dashboard?.totalBookings,
       icon: assets.listIconColored,
     },
     {
       title: "Pending",
-      value: data.pendingBookings,
+      value: dashboard?.pendingBookings,
       icon: assets.cautionIconColored,
     },
     {
       title: "Confirmed",
-      value: data.completedBookings,
+      value: dashboard?.completedBookings,
       icon: assets.listIconColored,
     },
   ];
-  const currency = import.meta.env.VITE_CURRENCY;
-  useEffect(() => {
-    setData(dummyDashboardData);
-  }, []);
+
   return (
     <div className="px-4 pt-10 md:px-10  ">
       <Title
@@ -65,7 +56,7 @@ export default function Dashboard() {
         <div className="p-4 md:p-6 border border-borderColor rounded-md max-w-lg w-full">
           <h1 className="text-lg font-semibold">Recent Bookings</h1>
           <p className="text-sm text-gray-500">Latest customer bookings </p>
-          {data.recentBookings.map((booking, index) => (
+          {dashboard.recentBookings?.map((booking, index) => (
             <div key={index} className="mt-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div>
@@ -110,7 +101,7 @@ export default function Dashboard() {
           <p className="text-gray-500">Revenue for current month</p>
           <p className="text-3xl text-primary font-semibold">
             {currency}
-            {data.monthlyRevenue}
+            {dashboard.monthlyRevenue}
           </p>
         </div>
       </div>

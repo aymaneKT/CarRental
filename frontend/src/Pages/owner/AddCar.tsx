@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import type { ICar } from "../../Interfaces/ICar";
 import Title from "../../components/owner/Title";
 import { assets, cityList } from "../../assets/assets";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 export default function AddCar() {
-  const [image, setImage] = useState<File | Blob>();
+  const { axios, currency, setDashboard, setCarsOwnwer, carsOwnwer } =
+    useAppContext();
+  const [image, setImage] = useState<File | Blob | null>();
   const [car, setCar] = useState<ICar>({
     brand: "",
     model: "",
@@ -16,10 +20,51 @@ export default function AddCar() {
     seating_capacity: 0,
     location: "",
     description: "",
+    isAvailable: false,
   });
-  const currency = import.meta.env.VITE_CURRENCY;
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("brand", car.brand);
+    formData.append("model", car.model);
+    formData.append("year", car.year.toString());
+    formData.append("pricePerDay", car.pricePerDay.toString());
+    formData.append("category", car.category);
+    formData.append("transmission", car.transmission);
+    formData.append("fuel_type", car.fuel_type);
+    formData.append("seating_capacity", car.seating_capacity.toString());
+    formData.append("location", car.location);
+    formData.append("description", car.description);
+    if (image) {
+      formData.append("image", image);
+    }
+    axios
+      .post("/addCar", formData)
+      .then((result) => {
+        setCar({
+          brand: "",
+          model: "",
+          year: 0,
+          pricePerDay: 0,
+          category: "",
+          transmission: "",
+          fuel_type: "",
+          seating_capacity: 0,
+          location: "",
+          description: "",
+        });
+        setImage(null);
+        setDashboard((prev) => ({
+          ...prev,
+          totalCars: (prev.totalCars ?? 0) + 1,
+        }));
+        setCarsOwnwer([...carsOwnwer, result.data.newCar]);
+        toast.success(result.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.response.data.message || "Failed to add car");
+      });
   };
   const handleChanges = (
     e: React.ChangeEvent<
@@ -108,7 +153,7 @@ export default function AddCar() {
             <input
               id="daily-price"
               type="number"
-              placeholder="2025"
+              placeholder="100"
               className="px-3 py-2 mt-1 border border-borderColor rounded-md outline-none"
               value={car.pricePerDay}
               onChange={handleChanges}

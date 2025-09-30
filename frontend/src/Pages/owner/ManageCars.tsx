@@ -1,17 +1,10 @@
-import { useEffect, useState } from "react";
-import type { ICar } from "../../Interfaces/ICar";
-import { assets, dummyCarData } from "../../assets/assets";
+import { assets } from "../../assets/assets";
 import Title from "../../components/owner/Title";
+import { useAppContext } from "../../context/AppContext";
 
 export default function ManageCars() {
-  const [cars, setCars] = useState<ICar[]>();
-  const currency = import.meta.env.VITE_CURRENCY;
-  const fetchOwnerCars = async () => {
-    setCars(dummyCarData);
-  };
-  useEffect(() => {
-    fetchOwnerCars();
-  }, []);
+  const { currency, carsOwnwer } = useAppContext();
+
   return (
     <div className="px-4 pt-10 md:px-10 w-full">
       <Title
@@ -30,7 +23,7 @@ export default function ManageCars() {
             </tr>
           </thead>
           <tbody>
-            {cars?.map((car) => (
+            {carsOwnwer?.map((car) => (
               <tr key={car._id} className="border-t border-borderColor">
                 <td className="p-3 flex items-center gap-3">
                   <img
@@ -58,12 +51,12 @@ export default function ManageCars() {
                 <td className="p-3 max-md:hidden">
                   <span
                     className={`px-3 py-1 text-xs rounded-full ${
-                      car.isAvaliable
+                      car.isAvailable
                         ? "text-green-500 bg-green-100"
                         : "text-red-500 bg-red-100"
                     }`}
                   >
-                    {car.isAvaliable ? "Available" : "Unavailable"}
+                    {car.isAvailable ? "Available" : "Unavailable"}
                   </span>
                 </td>
                 <td className="p-3 flex items-center">
@@ -71,7 +64,7 @@ export default function ManageCars() {
                     loading="lazy"
                     className="cursor-pointer"
                     src={
-                      car.isAvaliable ? assets.eye_close_icon : assets.eye_icon
+                      car.isAvailable ? assets.eye_close_icon : assets.eye_icon
                     }
                   />
                   <img

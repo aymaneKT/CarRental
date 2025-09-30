@@ -1,16 +1,28 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { assets, dummyUserData, ownerMenuLinks } from "../../assets/assets";
+import { assets, ownerMenuLinks } from "../../assets/assets";
 import { useState } from "react";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 export default function SideBar() {
-  const user = dummyUserData;
+  const { user, axios, setUser } = useAppContext();
   const location = useLocation().pathname;
-  const [image, setImage] = useState<Blob | File>();
+  const [image, setImage] = useState<Blob | File | null>();
 
   const updateImage = async () => {
+    const formData = new FormData();
     if (image) {
-      user.image = URL.createObjectURL(image);
-      setImage(undefined);
+      formData.append("image", image);
+      axios
+        .patch("/update-profile", formData)
+        .then((result) => {
+          setUser({ ...user, image: URL.createObjectURL(image) });
+          toast.success(result.data.message);
+          setImage(null);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
     }
   };
   return (
@@ -18,7 +30,7 @@ export default function SideBar() {
       <div className="group relative">
         <label htmlFor="image">
           <img
-            src={image ? URL.createObjectURL(image) : user.image || ""}
+            src={image ? URL.createObjectURL(image) : user?.image || assets.user_profile}
             alt="Profile Image"
             className="h-9 md:h-14 w-9 md:w-14 rounded-full mx-auto"
           />
@@ -29,7 +41,7 @@ export default function SideBar() {
             hidden
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
-                setImage(e.target.files[0]);
+          setImage(e.target.files[0]);
               }
             }}
           />
@@ -46,7 +58,7 @@ export default function SideBar() {
           Save <img src={assets.check_icon} width={13} alt="" loading="lazy" />
         </button>
       )}
-      <p className="mt-2 text-base max-md:hidden">{user.name}</p>
+      <p className="mt-2 text-base max-md:hidden">{user?.name}</p>
       <div className="w-full">
         {ownerMenuLinks.map((link, index) => (
           <NavLink

@@ -1,7 +1,25 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { assets, menuLinks } from "../assets/assets";
 import { useState } from "react";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
+
 export default function Navbar() {
+  const { setShowLogin, user, logOut, isOwner, axios, setIsOwner } =
+    useAppContext();
+
+  const changeRole = () => {
+    axios
+      .put("/changeRole")
+      .then((result) => {
+        setIsOwner(true);
+        toast.success(result.data.message);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error || "Failed to change role");
+      });
+  };
+
   const location = useLocation().pathname;
   const navigate = useNavigate();
   const [isOpenNavbar, setIsOpenNavBar] = useState<boolean>(false);
@@ -40,9 +58,20 @@ export default function Navbar() {
           <img src={assets.search_icon} alt="search" loading="lazy" />
         </div>
         <div className="flex gap-6 items-center">
-          <button onClick={() => navigate("/owner")}>Dashboard</button>
-          <button className="px-8 py-2 bg-primary hover:bg-primary-dull text-white rounded-lg">
-            Login
+          <button
+            onClick={() => {
+              isOwner ? navigate("/owner") : changeRole();
+            }}
+          >
+            {isOwner ? "Dashboard" : "List cars"}
+          </button>
+          <button
+            onClick={() => {
+              user ? logOut() : setShowLogin(true);
+            }}
+            className="px-8 py-2 bg-primary hover:bg-primary-dull text-white rounded-lg"
+          >
+            {user ? "logout" : "Login"}
           </button>
         </div>
       </div>
