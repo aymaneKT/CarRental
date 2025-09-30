@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Title from "../../components/owner/Title";
 import type { IBooking } from "../../Interfaces/IBooking";
-import { assets, dummyMyBookingsData } from "../../assets/assets";
+import { dummyMyBookingsData } from "../../assets/assets";
 
 export default function ManageBookings() {
   const [bookings, setBookings] = useState<IBooking[]>();
@@ -39,46 +39,42 @@ export default function ManageBookings() {
                     className="h-12 w-12 aspect-square rounded-lg object-cover"
                     loading="lazy"
                   />
-                  <div className="max-md:hidden">
-                    <p>
-                      {car.brand}
-                      {car.model}
-                    </p>
-                    <p>
-                      {car.seating_capacity} • {car.transmission}
-                    </p>
-                  </div>
-                </td>
-                <td className="p-3 max-md:hidden">{car.category}</td>
-                <td className="p-3">
-                  {" "}
-                  {car.pricePerDay}
-                  {currency}/day
+                  <p className="max-md:hidden font-medium">
+                    {booking.car?.brand} - {booking.car?.model}
+                  </p>
                 </td>
                 <td className="p-3 max-md:hidden">
-                  <span
-                    className={`px-3 py-1 text-xs rounded-full ${
-                      car.isAvaliable
-                        ? "text-green-500 bg-green-100"
-                        : "text-red-500 bg-red-100"
-                    }`}
-                  >
-                    {car.isAvaliable ? "Available" : "Unavailable"}
+                  {booking.pickupDate?.split("T")[0]} -{" "}
+                  {booking.returnDate?.split("T")[0]}
+                </td>
+                <td className="p-3">
+                  {booking.price}
+                  {currency}
+                </td>
+                <td className="p-3 max-md:hidden">
+                  <span className="bg-gray-100 px-3 py-1 rounded-full text-xs">
+                    Offline
                   </span>
                 </td>
-                <td className="p-3 flex items-center">
-                  <img
-                    loading="lazy"
-                    className="cursor-pointer"
-                    src={
-                      car.isAvaliable ? assets.eye_close_icon : assets.eye_icon
-                    }
-                  />
-                  <img
-                    loading="lazy"
-                    className="cursor-pointer"
-                    src={assets.delete_icon}
-                  />
+               
+                <td className="p-3">
+                  {booking.status === "pending" ? (
+                    <select className="px-2 py-1.5 mt-1 text-gray-500 border border-borderColor rounded-ms outline-none">
+                      <option value="pending">Pending</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="confirmed">Confirmed</option>
+                    </select>
+                  ) : (
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        booking.status === "confirmed"
+                          ? "text-green-500 bg-green-100"
+                          : "bg-red-100 text-red-500"
+                      }`}
+                    >
+                      {booking.status}
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}

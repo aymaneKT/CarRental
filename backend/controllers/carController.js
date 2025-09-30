@@ -125,18 +125,10 @@ export const deleteCar = async (req, res) => {
   }
 };
 
-export const getDashbordData = async (req, res) => {
+export const getAllCars = async (req, res) => {
   try {
-    const { id, role } = req.user;
-
-    if (role !== "owner") {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
-    }
-
-    const cars = await Car.find({ owner: id });
+    const cars = await Car.find({isAvailable : true});
+    return res.status(200).json({success : true , cars})
   } catch (error) {
     console.error("Error:", error.message);
     return res.status(500).json({ message: "Server Error" });
