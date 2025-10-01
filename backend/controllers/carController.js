@@ -3,6 +3,7 @@ import { imagekit } from "../middleware/imageKit.js";
 import { Car } from "../models/carSchema.js";
 export const addCar = async (req, res) => {
   const userId = req.user.id;
+  console.log(req.body)
   const {
     brand,
     model,
@@ -12,6 +13,7 @@ export const addCar = async (req, res) => {
     transmission,
     pricePerDay,
     location,
+    category
   } = req.body;
 
   const image = req.file;
@@ -25,7 +27,8 @@ export const addCar = async (req, res) => {
     !transmission ||
     !pricePerDay ||
     !location ||
-    !image
+    !image ||
+    !category
   ) {
     if (image) fs.unlinkSync(image.path);
     return res
@@ -58,6 +61,7 @@ export const addCar = async (req, res) => {
       transmission,
       pricePerDay,
       location,
+      category
     });
     fs.unlinkSync(image.path);
 
@@ -112,7 +116,8 @@ export const deleteCar = async (req, res) => {
     const carId = req.params.carId;
 
     const car = await Car.findById(carId);
-    if (car.owner !== userId) {
+
+    if (car.owner.toString() !== userId) {
       return res.status(401).json({ succes: false, message: "Unauthorized" });
     }
     car.isAvailable = false;
@@ -127,8 +132,8 @@ export const deleteCar = async (req, res) => {
 
 export const getAllCars = async (req, res) => {
   try {
-    const cars = await Car.find({isAvailable : true});
-    return res.status(200).json({success : true , cars})
+    const cars = await Car.find({ isAvailable: true });
+    return res.status(200).json({ success: true, cars });
   } catch (error) {
     console.error("Error:", error.message);
     return res.status(500).json({ message: "Server Error" });

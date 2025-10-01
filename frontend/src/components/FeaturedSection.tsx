@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { assets, dummyCarData } from "../assets/assets";
+import { assets } from "../assets/assets";
 import type { ICar } from "../Interfaces/ICar";
 import CarCard from "./CarCard";
 import Title from "./Title";
+import { useAppContext } from "../context/AppContext";
 
 export default function FeaturedSection() {
+  const { cars } = useAppContext();
   const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center py-24 px-6 md:px-10 lg:px-24 xl:px-32">
@@ -15,7 +17,7 @@ export default function FeaturedSection() {
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-18">
-        {dummyCarData.map((car: ICar) => (
+        {cars.slice(0.4).map((car: ICar) => (
           <CarCard car={car} key={car._id} />
         ))}
       </div>

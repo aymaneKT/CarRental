@@ -28,9 +28,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [returnDate, setReturnDate] = useState<string>("");
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const [cars, setCars] = useState<ICar[]>([]);
-  const [dashboard, setDashboard] = useState<IDashboard>({});
+  const [dashboard, setDashboard] = useState<IDashboard>({
+    totalCars: 0,
+    totalBookings: 0,
+    pendingBookings: 0,
+    completedBookings: 0,
+    recentBookings: [],
+    monthlyRevenue: 0,
+  });
   const [carsOwnwer, setCarsOwnwer] = useState<ICar[]>([]);
   const [ownerBookings, setOwnerBookings] = useState<IBooking[]>([]);
+  const [userBookings, setUserBookings] = useState<IBooking[]>([]);
   const fetchUser = async () => {
     axios
       .get("/userData")
@@ -47,6 +55,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     axios
       .get("/dashboard")
       .then((result) => {
+
         setDashboard(result.data.dashBordData || {});
       })
       .catch((error) => {
@@ -63,6 +72,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         toast.error(error.response.data.error || "Failed to fetch cars");
       });
   };
+  const fetchUserBookings = async () => {
+    axios
+      .get("/userBooking")
+      .then((result) => {
+        setUserBookings(result.data.bookings ?? []);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error || "Failed to fetch cars");
+      });
+  };
 
   const logOut = () => {
     localStorage.removeItem("token");
@@ -71,6 +90,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     axios.defaults.headers.common["Authorization"] = "";
     toast.success("You have been logged out");
+    navigate("/");
   };
 
   const fetchOwnerCars = () => {
@@ -106,14 +126,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
-      if (isOwner) {
-        fetchDashboardData();
-        fetchOwnerCars();
-        fetchOwnerBookings();
-      }
+      fetchUserBookings();
     }
-  }, [token, isOwner]);
-
+  }, [token]);
+  useEffect(() => {
+    if (isOwner) {
+      fetchDashboardData();
+      fetchOwnerCars();
+      fetchOwnerBookings();
+    }
+  }, [isOwner]);
   const value: IContext = {
     navigate,
     currency,
@@ -140,7 +162,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     carsOwnwer,
     setCarsOwnwer,
     ownerBookings,
-    setOwnerBookings
+    setOwnerBookings,
+    userBookings,
+    setUserBookings,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

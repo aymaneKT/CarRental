@@ -3,16 +3,29 @@ import { assets, menuLinks } from "../assets/assets";
 import { useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
+import type { IUser } from "../Interfaces/IUser";
 
 export default function Navbar() {
-  const { setShowLogin, user, logOut, isOwner, axios, setIsOwner } =
-    useAppContext();
+  const {
+    setShowLogin,
+    user,
+    logOut,
+    isOwner,
+    axios,
+    setIsOwner,
+    setUser,
+    setToken,
+  } = useAppContext();
 
   const changeRole = () => {
     axios
       .put("/changeRole")
       .then((result) => {
+        const updatedUser: IUser = result.data.user;
+        setUser(updatedUser);
         setIsOwner(true);
+        setToken(result.data.token);
+        localStorage.setItem("token", result.data.token);
         toast.success(result.data.message);
       })
       .catch((error) => {

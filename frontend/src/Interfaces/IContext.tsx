@@ -32,4 +32,6 @@ export interface IContext {
   setCarsOwnwer: React.Dispatch<React.SetStateAction<ICar[]>>;
   ownerBookings: IBooking[];
   setOwnerBookings: React.Dispatch<React.SetStateAction<IBooking[]>>;
+  userBookings: IBooking[];
+  setUserBookings: React.Dispatch<React.SetStateAction<IBooking[]>>;
 }

@@ -4,9 +4,9 @@ import Title from "./Title";
 export default function Testimonial() {
   const testimonials = [
     {
-      name: "Test Name",
+      name: "Aymane Kabti",
       location: "Terni, Italy",
-      image: assets.testimonial_image_1,
+      image: assets.user_profile,
       rating: 5,
       testimonial:
         "I've rented cars from various companies, but the experience with CarRental was exceptional",
@@ -22,7 +22,7 @@ export default function Testimonial() {
     {
       name: "Aymane Kabti",
       location: "Béni Mellal, Morocco",
-      image: assets.testimonial_image_2,
+      image: assets.testimonial_image_1,
       rating: 5,
       testimonial:
         "I higly recommend CarRental! Their fleet is amazing, and I always feel like I'm getting the best deal with excellent service",

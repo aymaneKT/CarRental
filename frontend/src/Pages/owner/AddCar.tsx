@@ -22,6 +22,7 @@ export default function AddCar() {
     description: "",
     isAvailable: false,
   });
+  
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
@@ -66,6 +67,7 @@ export default function AddCar() {
         toast.error(error.response.data.message || "Failed to add car");
       });
   };
+console.log(car)
   const handleChanges = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement

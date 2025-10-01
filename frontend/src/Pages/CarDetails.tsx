@@ -1,18 +1,51 @@
 import { useNavigate, useParams } from "react-router-dom";
 import type { ICar } from "../Interfaces/ICar";
 import { useEffect, useState } from "react";
-import { assets, dummyCarData } from "../assets/assets";
+import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 export default function CarDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [car, setCar] = useState<ICar>();
-  const CURRENCY_SYMBOL = import.meta.env.VITE_CURRENCY;
+  const {
+    cars,
+    currency,
+    axios,
+    setPickUpDate,
+    pickUpDate,
+    setReturnDate,
+    returnDate,
+    setUserBookings,
+    userBookings,
+  } = useAppContext();
   useEffect(() => {
-    setCar(dummyCarData.find((car: ICar) => car._id === id));
+    setCar(cars.find((car: ICar) => car._id === id));
   }, [id]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    axios
+      .post(`/createBooking`, {
+        car: id,
+        pickupDate: pickUpDate,
+        returnDate,
+      })
+      .then((result) => {
+        toast.success(result.data.message);
+        setUserBookings([...userBookings, result.data.newBooking]);
+        setPickUpDate("");
+        setReturnDate("");
+        console.log(result)
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(
+          error.response.data.message ||
+            "Failed to book the car. Please try again later."
+        );
+      });
   };
 
   return car ? (
@@ -104,9 +137,12 @@ export default function CarDetails() {
           </div>
         </div>
         {/* la parte destra del form  */}
-        <form className="shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500 ">
+        <form
+          onSubmit={handleSubmit}
+          className="shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500 "
+        >
           <p className="flex items-center  justify-between text-2xl text-gray-800">
-            {CURRENCY_SYMBOL}
+            {currency}
             {car.pricePerDay}{" "}
             <span className="text-base text-gray-400 font-normal">
               {" "}
@@ -122,6 +158,8 @@ export default function CarDetails() {
               id="pickup-date"
               min={new Date().toISOString().split("T")[0]}
               required
+              onChange={(e) => setPickUpDate(e.target.value)}
+              value={pickUpDate}
             />
           </div>
           {/*  */}
@@ -130,9 +168,11 @@ export default function CarDetails() {
             <input
               type="date"
               className="border border-borderColor px-3 py-2 rounded-lg"
-              id="pickup-date"
+              id="return-date"
               min={new Date().toISOString().split("T")[0]}
               required
+              onChange={(e) => setReturnDate(e.target.value)}
+              value={returnDate}
             />
           </div>
           <button className="w-full bg-primary hover:bg-primary-dull transition-all py-3 font-medium text-white rounded-xl cursor-pointer">

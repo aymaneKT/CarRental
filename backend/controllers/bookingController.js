@@ -12,7 +12,7 @@ const checkAvailability = async (car, pickupDate, returnDate) => {
 
 export const checkAvailabilityOfCar = async (req, res) => {
   try {
-    const { location, pickupDate, returnDate } = req.body;
+    const { location, pickupDate, returnDate } = req.query;
 
     const cars = await Car.find({ location, isAvailable: true });
 
@@ -64,16 +64,20 @@ export const createBooking = async (req, res) => {
     const retDate = new Date(returnDate);
     const numOfDays = Math.ceil((retDate - pickDate) / (1000 * 60 * 60 * 24));
     const price = carData.pricePerDay * numOfDays;
-    await Booking.create({
+    const booking = await Booking.create({
       car,
-      owner: carData.owner,
+      owner: carData.owner.toString(),
       user: id,
       pickupDate,
       returnDate,
       price,
     });
-
-    res.status(201).json({ success: true, message: "Booking Created" });
+    const newBooking = await Booking.findById(booking.id).populate("car");
+    res.status(201).json({
+      success: true,
+      message: `Booking successful for ${carData.brand} ${carData.model}`,
+      newBooking,
+    });
   } catch (error) {
     console.error("Error :", error.message);
     res.status(500).json({ message: "Server Error" });
