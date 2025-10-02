@@ -26,18 +26,7 @@ It allows users to browse, book, and manage cars, while owners can add vehicles,
 
 ---
 
-📂 Project Structure
 
-.
-├── client/            # Frontend (React + Vite + TS)
-│   ├── src/           # Components, Pages, Hooks, Context, Utils
-│   ├── vite.config.ts
-│   └── package.json
-├── backend/           # Backend (Node.js + Express + MongoDB)
-│   ├── src/           # Config, Controllers, Routes, Models, Middleware
-│   ├── server.js
-│   └── package.json
-└── README.md          # Fullstack documentation
 
 ---
 
