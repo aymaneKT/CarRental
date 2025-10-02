@@ -11,7 +11,8 @@ export default function ConfirmationModal({
   setIdCarToDelete,
   idCarToDelete,
 }: ConfirmationModalType) {
-  const { axios, setCarsOwnwer, carsOwnwer, setDashboard } = useAppContext();
+  const { axios, setCarsOwnwer, carsOwnwer, setDashboard, setCars, cars } =
+    useAppContext();
   const deleteCar = () => {
     axios
       .patch(`/deleteCar/${idCarToDelete}`)
@@ -22,8 +23,9 @@ export default function ConfirmationModal({
         toast.success(result.data.message);
         setDashboard((prev) => ({
           ...prev,
-          totalCars: (prev.totalCars ?? 0)  - 1,
+          totalCars: (prev.totalCars ?? 0) - 1,
         }));
+        setCars(cars.filter((car) => car._id !== idCarToDelete));
       })
       .catch((error) => {
         console.log(error);

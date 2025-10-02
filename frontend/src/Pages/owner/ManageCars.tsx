@@ -54,9 +54,11 @@ export default function ManageCars() {
             </thead>
             <tbody>
               {carsOwnwer.length === 0 ? (
-                <td colSpan={5} className="p-6 text-center text-gray-400">
-                  No Cars found.
-                </td>
+                <tr>
+                  <td colSpan={5} className="p-6 text-center text-gray-400">
+                    No Cars found.
+                  </td>
+                </tr>
               ) : (
                 carsOwnwer?.map((car) => (
                   <tr key={car._id} className="border-t border-borderColor">

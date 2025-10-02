@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import type { ICar } from "../../Interfaces/ICar";
 import Title from "../../components/owner/Title";
-import { assets, cityList } from "../../assets/assets";
+import { assets, categoryCar, cityList } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 
 export default function AddCar() {
-  const { axios, currency, setDashboard, setCarsOwnwer, carsOwnwer } =
-    useAppContext();
+  const {
+    axios,
+    currency,
+    setDashboard,
+    setCarsOwnwer,
+    carsOwnwer,
+    cars,
+    setCars,
+  } = useAppContext();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [image, setImage] = useState<File | Blob | null>();
   const [car, setCar] = useState<ICar>({
     brand: "",
@@ -22,8 +30,9 @@ export default function AddCar() {
     description: "",
     isAvailable: false,
   });
-  
+
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     e.preventDefault();
     const formData = new FormData();
     formData.append("brand", car.brand);
@@ -59,15 +68,17 @@ export default function AddCar() {
           ...prev,
           totalCars: (prev.totalCars ?? 0) + 1,
         }));
+
         setCarsOwnwer([...carsOwnwer, result.data.newCar]);
         toast.success(result.data.message);
+        setCars([...cars, result.data.newCar]);
       })
       .catch((error) => {
         console.log(error);
         toast.error(error.response.data.message || "Failed to add car");
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
-console.log(car)
   const handleChanges = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -175,8 +186,12 @@ console.log(car)
               value={car.category}
             >
               <option value="">Select a category</option>
-              <option value="SUV">SUV</option>
-              <option value="Van">Van</option>
+
+              {categoryCar.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
               <option value="Sedan">Sedan</option>
             </select>
           </div>
@@ -263,7 +278,7 @@ console.log(car)
         </div>
         <button className="flex items-center gap-2 px-4 py-2.5 hover:bg-primary-dull  mt-4 bg-primary text-white rounded-md font-medium w-max cursor-pointer">
           <img src={assets.tick_icon} loading="lazy" />
-          List Your Car
+          {isLoading ? "Listing..." : "List Your Car"}
         </button>
       </form>
     </div>

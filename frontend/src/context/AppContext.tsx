@@ -55,7 +55,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     axios
       .get("/dashboard")
       .then((result) => {
-
         setDashboard(result.data.dashBordData || {});
       })
       .catch((error) => {
@@ -124,7 +123,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.getItem("token")}`;
       fetchUser();
       fetchUserBookings();
     }

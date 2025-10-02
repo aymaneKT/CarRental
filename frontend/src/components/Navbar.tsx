@@ -27,6 +27,7 @@ export default function Navbar() {
         setToken(result.data.token);
         localStorage.setItem("token", result.data.token);
         toast.success(result.data.message);
+        console.log(result.data.token);
       })
       .catch((error) => {
         toast.error(error.response.data.error || "Failed to change role");

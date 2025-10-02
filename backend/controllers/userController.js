@@ -83,11 +83,11 @@ export const changeRoleToOwner = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(userId, {
       role: "owner",
-    });
+    },{ new: true });
     if (!user) {
       return res.status(404).json({ message: "user not found" });
     }
-    const token = generateToken(user._id, user.role);
+    const token =  generateToken(user._id, user.role);
     res.status(200).json({ message: "Role updated successfully", user, token });
   } catch (error) {
     console.error("Error :", error.message);

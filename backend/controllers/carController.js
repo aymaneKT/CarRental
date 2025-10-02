@@ -3,7 +3,6 @@ import { imagekit } from "../middleware/imageKit.js";
 import { Car } from "../models/carSchema.js";
 export const addCar = async (req, res) => {
   const userId = req.user.id;
-  console.log(req.body)
   const {
     brand,
     model,

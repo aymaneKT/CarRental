@@ -77,9 +77,11 @@ export default function ManageBookings() {
           </thead>
           <tbody>
             {ownerBookings.length === 0 ? (
-              <td colSpan={5} className="p-6 text-center text-gray-400">
-                No bookings found.
-              </td>
+              <tr>
+                <td colSpan={5} className="p-6 text-center text-gray-400">
+                  No bookings found.
+                </td>
+              </tr>
             ) : (
               ownerBookings?.map((booking) => (
                 <tr key={booking._id} className="border-t border-borderColor">
